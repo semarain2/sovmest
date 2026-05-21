@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>СОВМЕСТИМОСТЬ — Админ-панель</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a1a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    h1 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; margin-bottom: 20px; color: #c084fc; }
+    .login-form { max-width: 300px; margin: 100px auto; text-align: center; }
+    .login-form input {
+      width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333;
+      background: #1a1a2e; color: #fff; font-size: 1rem; margin-bottom: 12px;
+    }
+    .login-form button {
+      width: 100%; padding: 12px; border-radius: 8px; border: none;
+      background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff;
+      font-weight: 700; cursor: pointer; font-size: 1rem;
+    }
+    .login-form button:hover { filter: brightness(1.1); }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px; margin-bottom: 30px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 20px; text-align: center;
+    }
+    .stat-value {
+      font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, #a855f7, #06b6d4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; }
+    th { background: rgba(168,85,247,0.15); text-align: left; padding: 12px; font-size: 0.8rem; color: #c084fc; }
+    td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+    tr:hover td { background: rgba(168,85,247,0.05); }
+    .user-row img { width: 32px; height: 32px; border-radius: 50%; vertical-align: middle; margin-right: 8px; }
+    .user-avatar-placeholder {
+      display: inline-flex; width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      align-items: center; justify-content: center; color: #fff;
+      font-weight: 700; font-size: 0.75rem; vertical-align: middle; margin-right: 8px;
+    }
+    .badge { padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
+    .badge-active { background: rgba(0,230,118,0.15); color: #00e676; }
+    .badge-inactive { background: rgba(255,82,82,0.15); color: #ff5252; }
+    .refresh-btn {
+      background: none; border: 1px solid #444; color: #94a3b8; padding: 6px 16px;
+      border-radius: 8px; cursor: pointer; font-size: 0.8rem; margin-bottom: 16px;
+    }
+    .refresh-btn:hover { border-color: #a855f7; color: #fff; }
+    #dashboard { display: none; }
+    .user-row { cursor: pointer; }
+    .detail-overlay { position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;display:none;overflow-y:auto;padding:20px; }
+    .detail-panel { max-width:700px;margin:20px auto;background:#1a1a2e;border:1px solid rgba(168,85,247,0.3);border-radius:16px;padding:24px; }
+    .detail-close { float:right;background:none;border:none;color:#94a3b8;font-size:1.5rem;cursor:pointer; }
+    .detail-close:hover { color:#fff; }
+    .calc-card { background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;margin:8px 0; }
+    .calc-row { display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px; }
+    .calc-score { font-family:'Outfit';font-weight:700;font-size:1.1rem; }
+    .calc-cat { font-size:0.75rem;padding:2px 8px;border-radius:8px;background:rgba(168,85,247,0.15);color:#c084fc; }
+  </style>
+</head>
+<body>
+  <div class="login-form" id="loginForm">
+    <h1>🔮 Админ-панель</h1>
+    <input type="password" id="adminPwd" placeholder="Пароль администратора">
+    <button onclick="login()">Войти</button>
+    <p id="loginError" style="color:#ff5252;margin-top:8px;font-size:0.8rem"></p>
+  </div>
+
+  <div id="dashboard">
+    <h1>🔮 СОВМЕСТИМОСТЬ — Аналитика</h1>
+    <button class="refresh-btn" onclick="loadData()">🔄 Обновить</button>
+    <button class="refresh-btn" onclick="logout()" style="margin-left:8px">🚪 Выйти</button>
+
+    <div class="stats-grid" id="statsGrid"></div>
+    
+    <h2 style="margin-bottom:12px;font-size:1.1rem;color:#94a3b8;">Пользователи</h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Пользователь</th>
+            <th>Telegram</th>
+            <th>Расчётов</th>
+            <th>Платных</th>
+            <th>Доход</th>
+            <th>Регистрация</th>
+            <th>Последний визит</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody id="usersTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+    <div class="detail-panel">
+      <button class="detail-close" onclick="closeDetail()">&times;</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <script>
+    let adminPwd = localStorage.getItem('sovmest_admin_pwd') || '';
+
+    // Auto-login if we have saved password
+    if (adminPwd) {
+      loadData();
+    }
+
+    function login() {
+      adminPwd = document.getElementById('adminPwd').value;
+      localStorage.setItem('sovmest_admin_pwd', adminPwd);
+      loadData();
+    }
+
+    function logout() {
+      localStorage.removeItem('sovmest_admin_pwd');
+      adminPwd = '';
+      document.getElementById('loginForm').style.display = '';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+
+    function loadData() {
+      fetch('/api.php?action=analytics&pwd=' + encodeURIComponent(adminPwd))
+        .then(r => r.json())
+        .then(data => {
+          if (!data.ok) {
+            localStorage.removeItem('sovmest_admin_pwd');
+            document.getElementById('loginForm').style.display = '';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginError').textContent = 'Неверный пароль';
+            return;
+          }
+          document.getElementById('loginForm').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          renderDashboard(data);
+        })
+        .catch(err => {
+          document.getElementById('loginError').textContent = 'Ошибка: ' + err.message;
+        });
+    }
+
+    function renderDashboard(data) {
+      const s = data.summary;
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card"><div class="stat-value">${s.total_users}</div><div class="stat-label">Пользователей</div></div>
+        <div class="stat-card"><div class="stat-value">${s.total_calcs}</div><div class="stat-label">Всего расчётов</div></div>
+        <div class="stat-card"><div class="stat-value">${s.total_paid}</div><div class="stat-label">Платных расчётов</div></div>
+        <div class="stat-card"><div class="stat-value">${s.total_revenue} сом</div><div class="stat-label">Доход</div></div>
+      `;
+
+      const tbody = document.getElementById('usersTable');
+      if (data.users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:#94a3b8">Пока нет пользователей. Данные появятся после авторизации через Telegram.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.users.map((u, i) => {
+        const hasTg = u.tg_id && u.first_name;
+        const name = hasTg ? ((u.first_name || '') + ' ' + (u.last_name || '')).trim() : ('📱 ' + (u.device_id || 'Аноним').substr(0, 16));
+        const avatar = u.photo_url
+          ? `<img src="${u.photo_url}" alt="">`
+          : `<span class="user-avatar-placeholder">${hasTg ? (u.first_name || '?')[0].toUpperCase() : '👤'}</span>`;
+        const tgLink = u.username ? `<a href="https://t.me/${u.username}" target="_blank" style="color:#06b6d4">@${u.username}</a>` : (u.tg_id ? `ID: ${u.tg_id}` : '<span style="color:#666">—</span>');
+        const created = u.created_at ? new Date(u.created_at).toLocaleDateString('ru') : '—';
+        const lastAct = u.last_active ? new Date(u.last_active).toLocaleDateString('ru') : '—';
+        const isRecent = u.last_active && (Date.now() - new Date(u.last_active).getTime() < 7 * 86400000);
+        const badge = isRecent
+          ? '<span class="badge badge-active">Активен</span>'
+          : '<span class="badge badge-inactive">Неактивен</span>';
+        const devId = u.device_id || u.tg_id || '';
+        return `<tr class="user-row" onclick="showUserDetail('${devId}')">
+          <td>${i + 1}</td>
+          <td>${avatar}${name || 'Без имени'}</td>
+          <td>${tgLink}</td>
+          <td><strong>${u.total_calcs}</strong></td>
+          <td>${u.paid_calcs}</td>
+          <td>${u.revenue} сом</td>
+          <td>${created}</td>
+          <td>${lastAct}</td>
+          <td>${badge}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Enter key login
+    document.getElementById('adminPwd').addEventListener('keypress', e => {
+      if (e.key === 'Enter') login();
+    });
+
+    function showUserDetail(devId) {
+      fetch('/api.php?action=user_details&pwd=' + encodeURIComponent(adminPwd) + '&device_id=' + encodeURIComponent(devId))
+        .then(r => r.json())
+        .then(data => {
+          if (!data.ok) return;
+          const u = data.user;
+          const h = data.history || [];
+          const hasTg = u.tg_id && u.first_name;
+          const name = hasTg ? ((u.first_name || '') + ' ' + (u.last_name || '')).trim() : ('📱 ' + (u.device_id || 'Аноним').substr(0, 20));
+          const catMap = {love:'💕 Любовь',business:'💼 Бизнес',children:'👶 Дети',friends:'🤝 Дружба'};
+          
+          let html = '<h2 style="color:#c084fc;margin-bottom:4px">' + (name||'Без имени') + '</h2>';
+          html += '<p style="color:#94a3b8;font-size:0.85rem;margin-bottom:16px">' + (u.username ? '@'+u.username : (u.device_id||'').substr(0,20)) + ' · Расчётов: ' + h.length + '</p>';
+          
+          if (h.length === 0) {
+            html += '<p style="color:#94a3b8;text-align:center;padding:30px">Нет расчётов</p>';
+          } else {
+            h.forEach(function(item, idx) {
+              const pA = item.profileA || {};
+              const pB = item.profileB || {};
+              const fwd = item.forward ? item.forward.percent : '?';
+              const rev = item.reverse ? item.reverse.percent : '?';
+              const cat = catMap[item.category] || item.category || '?';
+              const dateA = pA.date ? pA.date.split('-').reverse().join('.') : '';
+              const dateB = pB.date ? pB.date.split('-').reverse().join('.') : '';
+              const fColor = fwd >= 75 ? '#00e676' : fwd >= 55 ? '#ffd740' : '#ff5252';
+              const rColor = rev >= 75 ? '#00e676' : rev >= 55 ? '#ffd740' : '#ff5252';
+              
+              html += '<div class="calc-card">';
+              html += '<div class="calc-row">';
+              html += '<div><strong>' + (pA.name||'A') + '</strong> <span style="color:#94a3b8;font-size:0.75rem">' + dateA + '</span>';
+              html += ' → <strong>' + (pB.name||'B') + '</strong> <span style="color:#94a3b8;font-size:0.75rem">' + dateB + '</span></div>';
+              html += '<span class="calc-cat">' + cat + '</span>';
+              html += '</div>';
+              html += '<div class="calc-row" style="margin-top:6px">';
+              html += '<div>→ <span class="calc-score" style="color:' + fColor + '">' + fwd + '%</span></div>';
+              html += '<div>← <span class="calc-score" style="color:' + rColor + '">' + rev + '%</span></div>';
+              html += '</div></div>';
+            });
+          }
+          
+          document.getElementById('detailContent').innerHTML = html;
+          document.getElementById('detailOverlay').style.display = 'block';
+        });
+    }
+
+    function closeDetail() {
+      document.getElementById('detailOverlay').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

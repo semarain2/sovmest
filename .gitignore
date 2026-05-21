@@ -1,0 +1,11 @@
+﻿keys/
+key/
+*.tgz
+*.log
+.DS_Store
+package/
+fix_*.js
+check_layout.js
+apply_descs.js
+extract_chat.js
+new_descs.js

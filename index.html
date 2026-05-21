@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="СОВМЕСТИМОСТЬ — платформа психологической и стратегической совместимости. Узнай свою синергию">
+  <title>СОВМЕСТИМОСТЬ — Матрица Синергии</title>
+  <link rel="stylesheet" href="css/style.css?v=4.7">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <meta name="theme-color" content="#7c3aed">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Совместимость">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="logo">🔮 <span class="logo-text">СОВМЕСТИМОСТЬ</span> <span class="logo-version">v2.0</span></div>
+      <div class="header-meta">
+        <button class="about-method-btn" onclick="document.getElementById('aboutModal').style.display='flex'">📜 О методе</button>
+        <button class="install-btn" id="installBtn" style="display:none" onclick="installPWA()">📲 Установить</button>
+        <div class="free-counter" id="freeCounter" style="cursor:pointer;" onclick="document.getElementById('paywallModal').classList.add('visible');var tw=document.getElementById('tgWarning');if(tw)tw.style.display=typeof getTelegramUser==='function'&&getTelegramUser()?'none':'block'" title="Пополнить баланс обзоров">Осталось: <b id="freeLeft">2</b> обзора</div>
+        <button class="buy-pro-btn" onclick="document.getElementById('paywallModal').classList.add('visible');var tw=document.getElementById('tgWarning');if(tw)tw.style.display=typeof getTelegramUser==='function'&&getTelegramUser()?'none':'block'">💎 Купить PRO</button>
+        <div id="authArea">
+          <button class="tg-login-btn" id="tgLoginBtn" onclick="openTelegramAuth()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+            Войти
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- About Method Modal -->
+    <div class="about-modal-overlay" id="aboutModal" onclick="if(event.target===this)this.style.display='none'">
+      <div class="about-modal">
+        <button class="about-modal-close" onclick="document.getElementById('aboutModal').style.display='none'">✕</button>
+        <div class="about-modal-content">
+          <h2>📜 О методе расчёта</h2>
+          <p class="about-subtitle">Мы ничего не выдумывали. Всё основано на проверенных тысячелетиями системах.</p>
+          
+          <div class="about-section">
+            <div class="about-icon">🧠</div>
+            <h3>Психология · Число Сознания</h3>
+            <p>Основа — <strong>ведическая нумерология</strong> (Джйотиш), которой более 5000 лет. Число дня рождения определяет характер, потребности и теневые стороны личности. Эта система описана в древних текстах Вед и используется миллионами людей в Индии, Непале и Юго-Восточной Азии.</p>
+            <p class="about-source">📖 Источник: Вedicheская традиция, труды Харш Джохари «Инструменты Тантры», система 9 архетипов.</p>
+          </div>
+
+          <div class="about-section">
+            <div class="about-icon">🔥</div>
+            <h3>Инстинкты · Восточный гороскоп</h3>
+            <p><strong>Китайская астрология</strong> — система 12 животных, созданная более 2000 лет назад. Определяет подсознательные реакции, инстинкты и модели поведения. Треугольники совместимости (Дракон-Крыса-Обезьяна, Тигр-Лошадь-Собака и т.д.) проверены веками наблюдений.</p>
+            <p class="about-source">📖 Источник: Китайский зодиакальный цикл, классические таблицы совместимости Шэнсяо (生肖).</p>
+          </div>
+
+          <div class="about-section">
+            <div class="about-icon">🎯</div>
+            <h3>Миссия · Число Судьбы</h3>
+            <p>Сумма всех цифр даты рождения — <strong>число судьбы</strong> из ведической и пифагорейской нумерологии. Показывает жизненную миссию и направление развития. Два человека с гармоничными миссиями поддерживают рост друг друга.</p>
+            <p class="about-source">📖 Источник: Пифагорейская школа (VI в. до н.э.), ведическая нумерология.</p>
+          </div>
+
+          <div class="about-section">
+            <div class="about-icon">🌊</div>
+            <h3>Стихия · Западная астрология</h3>
+            <p>Совместимость стихий (Огонь, Земля, Воздух, Вода) и знаков зодиака — <strong>западная астрологическая традиция</strong>, берущая начало в Древней Греции (Птолемей, II в. н.э.). Элементальная совместимость — один из фундаментальных принципов астрологии.</p>
+            <p class="about-source">📖 Источник: «Тетрабиблос» Клавдия Птолемея, классическая западная астрология.</p>
+          </div>
+
+          <div class="about-section about-final">
+            <div class="about-icon">⚖️</div>
+            <h3>Как мы считаем?</h3>
+            <p>Мы объединяем <strong>4 независимых слоя</strong> в единый показатель совместимости. Каждый слой имеет свой вес, а финальный результат корректируется с учётом категории отношений (любовь, бизнес, дружба, дети). Это не гадание — это <strong>математическая модель</strong>, построенная на древних системах знаний.</p>
+          </div>
+
+          <button class="about-modal-close-btn" onclick="document.getElementById('aboutModal').style.display='none'">Понятно</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Section -->
+    <section class="input-section" id="inputSection">
+      <!-- Person A -->
+      <div class="glass-card person-card">
+        <div class="card-label">👤 Это Я</div>
+        <div class="form-group">
+          <label>Выбери себя</label>
+          <div class="profile-select-row">
+            <select id="profileSelectA" class="profile-select">
+              <option value="">— Выбери профиль —</option>
+            </select>
+            <button class="profile-add-btn" id="addProfileBtn" title="Добавить нового">+</button>
+          </div>
+        </div>
+        <!-- New profile form (hidden by default) -->
+        <div id="newProfileForm" class="new-profile-form" style="display:none;">
+          <div class="form-group">
+            <label for="nameA">Имя</label>
+            <input type="text" id="nameA" placeholder="Твоё имя" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Дата рождения</label>
+            <div class="date-selects">
+              <input type="tel" id="dayA" class="date-input" placeholder="ДД" maxlength="2" oninput="autoTabDate(this,'monthA');updateDateFromInputs('A')">
+              <input type="tel" id="monthA" class="date-input" placeholder="ММ" maxlength="2" oninput="autoTabDate(this,'yearA');updateDateFromInputs('A')">
+              <input type="tel" id="yearA" class="date-input date-input-year" placeholder="ГГГГ" maxlength="4" oninput="updateDateFromInputs('A')">
+            </div>
+            <input type="hidden" id="dateA">
+          </div>
+          <div style="display:flex;gap:10px">
+            <div class="form-group" style="flex:1">
+              <label>Пол</label>
+              <div class="gender-toggle" id="genderA">
+                <button type="button" class="gender-btn active" data-val="m" onclick="setGender('A','m',this)">♂ Муж</button>
+                <button type="button" class="gender-btn" data-val="f" onclick="setGender('A','f',this)">♀ Жен</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-preview" id="previewA">
+          <span>Выбери профиль или добавь новый</span>
+        </div>
+      </div>
+
+      <!-- Person B -->
+      <div class="glass-card person-card">
+        <div class="card-label">🔍 Кого проверяем</div>
+        <div class="form-group">
+          <label for="nameB">Имя</label>
+          <input type="text" id="nameB" placeholder="Имя партнёра" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="dateB">Дата рождения</label>
+            <div class="date-selects">
+              <input type="tel" id="dayB" class="date-input" placeholder="ДД" maxlength="2" oninput="autoTabDate(this,'monthB');updateDateFromInputs('B')">
+              <input type="tel" id="monthB" class="date-input" placeholder="ММ" maxlength="2" oninput="autoTabDate(this,'yearB');updateDateFromInputs('B')">
+              <input type="tel" id="yearB" class="date-input date-input-year" placeholder="ГГГГ" maxlength="4" oninput="updateDateFromInputs('B')">
+            </div>
+            <input type="hidden" id="dateB">
+        </div>
+        <div style="display:flex;gap:10px">
+          <div class="form-group" style="flex:1">
+            <label>Пол</label>
+            <div class="gender-toggle" id="genderB">
+                <button type="button" class="gender-btn" data-val="m" onclick="setGender('B','m',this)">♂ Муж</button>
+                <button type="button" class="gender-btn active" data-val="f" onclick="setGender('B','f',this)">♀ Жен</button>
+            </div>
+          </div>
+        </div>
+        <div class="profile-preview" id="previewB">
+          <span>Введи дату чтобы увидеть профиль</span>
+        </div>
+        <div class="form-group" style="margin-top:8px">
+          <label>Проверить совместимость на:</label>
+          <select class="profile-select cat-select" id="categorySelect" style="width:100%">
+            <option value="love">💕 Любовь</option>
+            <option value="business">💼 Бизнес</option>
+            <option value="children">👶 Мой ребёнок</option>
+            <option value="friends">🤝 Дружба</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Calculate Button -->
+    <button class="btn-primary" id="calcBtn" disabled>🔮 Рассчитать совместимость</button>
+
+    <!-- Results -->
+    <section class="results-section" id="resultsSection">
+      <!-- Direction A→B -->
+      <div class="direction-block" id="dirBlockFwd">
+        <div class="dir-block-header" id="dirHeaderFwd"></div>
+        <div class="glass-card gauge-container" id="gaugeCardFwd">
+          <div class="gauge-ring"><canvas id="gaugeCanvasFwd" width="400" height="400"></canvas>
+            <div class="gauge-percent" id="gaugePercentFwd">—<small>%</small></div></div>
+          <div class="gauge-label" id="gaugeLabelFwd">—</div>
+          <div class="gauge-desc" id="gaugeDescFwd">—</div>
+          <div id="multBadgesFwd" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"></div>
+          <div class="gauge-overall-desc" id="gaugeOverallDescFwd"></div>
+        </div>
+        <div class="layers-grid" id="layersGridFwd"></div>
+      </div>
+
+      <!-- Direction B→A -->
+      <div class="direction-block" id="dirBlockRev" style="margin-top:40px;">
+        <div class="dir-block-header" id="dirHeaderRev"></div>
+        <div class="glass-card gauge-container" id="gaugeCardRev">
+          <div class="gauge-ring"><canvas id="gaugeCanvasRev" width="400" height="400"></canvas>
+            <div class="gauge-percent" id="gaugePercentRev">—<small>%</small></div></div>
+          <div class="gauge-label" id="gaugeLabelRev">—</div>
+          <div class="gauge-desc" id="gaugeDescRev">—</div>
+          <div id="multBadgesRev" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"></div>
+          <div class="gauge-overall-desc" id="gaugeOverallDescRev"></div>
+        </div>
+        <div class="layers-grid" id="layersGridRev"></div>
+      </div>
+
+      <!-- Comparison Radar -->
+      <div class="glass-card radar-container" style="margin-top:24px;">
+        <h3 style="text-align:center;font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">📊 Сравнение слоёв</h3>
+        <canvas id="radarCanvasCompare" width="560" height="540" style="max-width:100%;"></canvas>
+      </div>
+      <!-- Pros & Cons -->
+      <div class="proscons">
+        <div class="glass-card pros-card">
+          <h3>✅ Сильные стороны</h3>
+          <ul id="prosList"></ul>
+        </div>
+        <div class="glass-card cons-card">
+          <h3>⚠️ Риски</h3>
+          <ul id="consList"></ul>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="result-actions" id="resultActions" style="display:none;">
+        <button class="action-btn action-share" id="shareBtn">📤 Поделиться</button>
+      </div>
+    </section>
+
+    <!-- Ranking (dynamic — only Person A) -->
+    <section class="ranking-section" id="rankingSection" style="display:none;">
+      <div id="rankingContainer"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p style="font-size:0.7rem;">© 2026 СОВМЕСТИМОСТЬ — Матрица Синергии</p>
+      <p style="font-size:0.6rem;color:rgba(255,255,255,0.2);margin-top:4px;">v4.0</p>
+    </footer>
+
+  </div>
+
+  <!-- Paywall Modal -->
+  <div class="modal-overlay" id="paywallModal">
+    <div class="modal-content" style="position:relative;overflow:hidden;">
+      <button class="about-modal-close" onclick="document.getElementById('paywallModal').classList.remove('visible')">✕</button>
+      <h2>💎 СОВМЕСТИМОСТЬ PRO</h2>
+      <p>Пополните баланс обзоров. Чем больше берёте — тем дешевле!</p>
+      
+      <div id="tgWarning" style="display:none;background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(245,158,11,0.1));border:1px solid rgba(251,191,36,0.3);border-radius:12px;padding:12px 14px;margin:12px 0;text-align:left;">
+        <div style="font-weight:700;color:#fbbf24;margin-bottom:4px;">⚠️ Войдите через Telegram</div>
+        <div style="font-size:0.8rem;color:#e2e8f0;line-height:1.4;">Чтобы не потерять оплаченные обзоры при смене устройства, войдите через Telegram.</div>
+        <button onclick="document.getElementById('paywallModal').classList.remove('visible');openTelegramAuth()" style="margin-top:8px;background:linear-gradient(135deg,#0088cc,#33b5e5);border:none;color:#fff;padding:8px 16px;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;width:100%;">📱 Войти через Telegram</button>
+      </div>
+      <div style="margin:12px 0;">
+        <label style="font-size:0.85rem;color:#94a3b8;margin-bottom:6px;display:block;">Количество обзоров:</label>
+        <select id="qtySelect" onchange="updatePaywallPrice()" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(168,85,247,0.3);background:#1a1a2e;color:#fff;font-size:1rem;">
+          <option value="1">1 обзор — 100 сом</option>
+          <option value="2" selected>2 обзора — 200 сом</option>
+          <option value="3">3 обзора — 300 сом</option>
+          <option value="5">5 обзоров — 475 сом 🔥 скидка 5%</option>
+          <option value="10">10 обзоров — 900 сом 🔥 скидка 10%</option>
+          <option value="20">20 обзоров — 1700 сом 🔥 скидка 15%</option>
+        </select>
+      </div>
+      
+      <div class="modal-price" id="modalPrice">200 сом</div>
+      <div id="discountBadge" style="font-size:0.8rem;color:#00e676;margin-bottom:12px;display:none;"></div>
+      
+      <button class="btn-primary" id="payBtn" style="margin-bottom:8px;position:relative;overflow:hidden;">💳 Оплатить через Finik</button>
+      <div style="margin-top:4px;"><button class="modal-close" id="modalClose">Закрыть</button></div>
+    </div>
+  </div>
+
+  <!-- Edit Name Modal -->
+  <div class="modal-overlay" id="editNameModal">
+    <div class="modal-content" style="position:relative">
+      <button class="about-modal-close" onclick="document.getElementById('editNameModal').classList.remove('visible')">✕</button>
+      <h2>✏️ Изменить имя</h2>
+      <div class="form-group" style="text-align:left;margin-top:16px;">
+        <input type="text" id="editNameInput" placeholder="Новое имя" autocomplete="off">
+        <input type="hidden" id="editProfileDate">
+      </div>
+      <button class="btn-primary" id="saveNameBtn" style="margin-bottom:12px;">Сохранить</button>
+      <br>
+      <button class="modal-close" id="closeEditNameModal">Отмена</button>
+    </div>
+  </div>
+
+  <!-- Report Popup Modal -->
+  <div class="modal-overlay" id="reportPopup">
+    <div class="modal-content report-popup-content" style="position:relative">
+      <button class="about-modal-close" id="closeReportPopup">✕</button>
+      <div id="reportPopupBody"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="js/data.js?v=4.2"></script>
+  <script src="js/engine.js?v=4.2"></script>
+  <script src="js/app.js?v=4.8"></script>
+  <script src="js/ui.js?v=4.8"></script>
+</body>
+</html>
