@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 // СОВМЕСТИМОСТЬ — UI Components (Charts, Gauge, etc.)
 // ============================================
 
@@ -985,7 +985,7 @@ function openReportPopupDirect(dateA, dateB, nameA, nameB, category) {
       </div>
       <div class="timeline-legend">
         <span class="legend-cs">Общая совместимость</span>
-        <span class="legend-mission">Включение Миссии</span>
+        
         <span class="legend-current">Сейчас</span>
       </div>
       <div id="timelineReasons" style="margin-top:16px;font-size:0.85rem;color:var(--text-secondary);line-height:1.5;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);"></div>
@@ -1128,7 +1128,7 @@ function drawTimelineChart(canvasId, timelineData) {
     ctx.font = '10px Inter';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
-    ctx.fillText(`${nameA} (Переход)`, transAStart.x + (transAEnd.x - transAStart.x)/2, yLine - 3);
+    ctx.fillText(nameA, transAStart.x + (transAEnd.x - transAStart.x)/2, yLine - 3);
     
     ctx.fillStyle = '#fbbf24';
     ctx.textAlign = 'center';
@@ -1152,7 +1152,7 @@ function drawTimelineChart(canvasId, timelineData) {
     ctx.font = '10px Inter';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
-    ctx.fillText(`${nameB} (Переход)`, transBStart.x + (transBEnd.x - transBStart.x)/2, yLine - 3);
+    ctx.fillText(nameB, transBStart.x + (transBEnd.x - transBStart.x)/2, yLine - 3);
     
     ctx.fillStyle = '#fbbf24';
     ctx.textAlign = 'center';

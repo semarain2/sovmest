@@ -544,10 +544,10 @@ function calcTimeline(personA, personB, category = 'love') {
       ageA: ageA,
       ageB: ageB,
       score: Math.round(score),
-      transitionAStart: ageA === 30 ? (personA.name || 'Партнёр 1') : null,
-      transitionAEnd: ageA === 33 ? (personA.name || 'Партнёр 1') : null,
-      transitionBStart: ageB === 30 ? (personB.name || 'Партнёр 2') : null,
-      transitionBEnd: ageB === 33 ? (personB.name || 'Партнёр 2') : null
+      transitionAStart: ageA === 30 ? ((personA.name || 'Персона 1') + ` (Миссия ${personA.mission})`) : null,
+      transitionAEnd: ageA === 33 ? ((personA.name || 'Персона 1') + ` (Миссия ${personA.mission})`) : null,
+      transitionBStart: ageB === 30 ? ((personB.name || 'Персона 2') + ` (Миссия ${personB.mission})`) : null,
+      transitionBEnd: ageB === 33 ? ((personB.name || 'Персона 2') + ` (Миссия ${personB.mission})`) : null
     });
   }
   
