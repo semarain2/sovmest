@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // СОВМЕСТИМОСТЬ — UI Components (Charts, Gauge, etc.)
 // ============================================
 
@@ -296,7 +296,28 @@ function renderResults(report) {
   const consList = document.getElementById('consList');
   prosList.innerHTML = report.pros.map(p => `<li>${p}</li>`).join('');
   consList.innerHTML = report.cons.map(c => `<li>${c}</li>`).join('');
-  
+    
+  // Timeline Chart in Main View
+  if (typeof calcTimeline === 'function') {
+    const mainTimelineContainer = document.getElementById('mainTimelineContainer');
+    if (mainTimelineContainer) {
+      mainTimelineContainer.style.display = 'block';
+      setTimeout(() => {
+        const timelineRes = calcTimeline(report.profileA, report.profileB, report.category);
+        const timelineData = timelineRes.data || timelineRes; 
+        drawTimelineChart('mainTimelineChart', timelineData);
+        
+        const reasonsDiv = document.getElementById('mainTimelineReasons');
+        if (reasonsDiv && timelineRes.reasons) {
+          const htmlReasons = timelineRes.reasons.map(r => 
+            '<div style="margin-bottom:8px;">' + r.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') + '</div>'
+          ).join('');
+          reasonsDiv.innerHTML = htmlReasons;
+        }
+      }, 100);
+    }
+  }
+    
   // Show action buttons
   document.getElementById('resultActions').style.display = 'flex';
   
