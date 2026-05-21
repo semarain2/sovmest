@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // SOVMESTIMOST — App Controller
 // ============================================
 
@@ -126,20 +126,29 @@ function populateProfileSelector() {
   const history = JSON.parse(localStorage.getItem('siynet_history') || '[]');
   const db = getProfilesDB();
   
-  // All profiles that were used as Person A
   const personAMap = {};
+  
+  // Fill from db
+  Object.keys(db).forEach(k => {
+    personAMap[k] = db[k];
+    personAMap[k].dbKey = k;
+  });
+
+  // Fill missing from history
   history.forEach(h => {
-    const key = h.profileA.date;
-    if (!personAMap[key]) {
-      personAMap[key] = db[key] || { name: h.profileA.name, date: h.profileA.date, code: h.profileA.code || '' };
+    const nameKey = (h.profileA.name || 'Без имени').toLowerCase().trim();
+    const key = h.profileA.date + '_' + nameKey;
+    if (!personAMap[key] && !personAMap[h.profileA.date]) {
+      personAMap[key] = { name: h.profileA.name, date: h.profileA.date, code: h.profileA.code || '', dbKey: key };
     }
   });
+
   const profiles = Object.values(personAMap).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   
   select.innerHTML = '<option value="">— Выбери профиль —</option>';
   profiles.forEach(p => {
     const opt = document.createElement('option');
-    opt.value = p.date;
+    opt.value = p.dbKey || p.date;
     let desc = p.code ? ` (${p.code})` : '';
     try {
       const full = getPersonProfile(p.date, p.name);
@@ -182,7 +191,20 @@ function initEventListeners() {
     }
     // Load from DB
     const db = getProfilesDB();
-    const p = db[val];
+    let p = db[val];
+    
+    // Fallback if it was from history and not in db
+    if (!p) {
+        const history = JSON.parse(localStorage.getItem('siynet_history') || '[]');
+        for (let h of history) {
+            const nameKey = (h.profileA.name || 'Без имени').toLowerCase().trim();
+            if (h.profileA.date + '_' + nameKey === val || h.profileA.date === val) {
+                p = h.profileA;
+                break;
+            }
+        }
+    }
+
     if (p) {
       document.getElementById('nameA').value = p.name;
       document.getElementById('dateA').value = p.date;
