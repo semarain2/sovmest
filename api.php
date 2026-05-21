@@ -208,14 +208,16 @@ switch ($action) {
             $legacyFile = $DATA_DIR . '/' . $tgId . '.json';
             if (file_exists($legacyFile)) {
                 $legacy = json_decode(file_get_contents($legacyFile), true);
-                if ($legacy && isset($legacy['history']) && count($legacy['history']) > 0) {
+                if ($legacy && !isset($legacy['migrated_to'])) {
                     $existingUids = array();
                     $curHist = isset($user['history']) ? $user['history'] : array();
                     foreach ($curHist as $h) { if (isset($h['uid'])) $existingUids[] = $h['uid']; }
-                    foreach ($legacy['history'] as $h) {
-                        if (isset($h['uid']) && !in_array($h['uid'], $existingUids)) {
-                            $curHist[] = $h;
-                            $existingUids[] = $h['uid'];
+                    if (isset($legacy['history'])) {
+                        foreach ($legacy['history'] as $h) {
+                            if (isset($h['uid']) && !in_array($h['uid'], $existingUids)) {
+                                $curHist[] = $h;
+                                $existingUids[] = $h['uid'];
+                            }
                         }
                     }
                     $user['history'] = $curHist;
@@ -223,6 +225,23 @@ switch ($action) {
                     if (!isset($user['username']) && isset($legacy['username'])) $user['username'] = $legacy['username'];
                     if (!isset($user['first_name']) && isset($legacy['first_name'])) $user['first_name'] = $legacy['first_name'];
                     if (!isset($user['photo_url']) && isset($legacy['photo_url'])) $user['photo_url'] = $legacy['photo_url'];
+                    
+                    // Migrate payments and revenue
+                    $legacyPaid = isset($legacy['paid_calcs']) ? intval($legacy['paid_calcs']) : 0;
+                    $curPaid = isset($user['paid_calcs']) ? intval($user['paid_calcs']) : 0;
+                    $user['paid_calcs'] = max($curPaid, $legacyPaid);
+                    
+                    $legacyRev = isset($legacy['revenue']) ? intval($legacy['revenue']) : 0;
+                    $curRev = isset($user['revenue']) ? intval($user['revenue']) : 0;
+                    $user['revenue'] = max($curRev, $legacyRev);
+                    
+                    if (isset($legacy['payments'])) {
+                        if (!isset($user['payments'])) $user['payments'] = array();
+                        foreach ($legacy['payments'] as $p) {
+                            $user['payments'][] = $p;
+                        }
+                    }
+
                     // Mark legacy as migrated
                     $legacy['migrated_to'] = $device_id;
                     $legacy['history'] = array();
