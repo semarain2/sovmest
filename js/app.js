@@ -132,19 +132,22 @@ function populateProfileSelector() {
   history.forEach(h => {
     if (h.hidden) return; // Skip hidden/deleted ratings
     
-    const nameKey = (h.profileA.name || 'Без имени').toLowerCase().trim();
-    const key = h.profileA.date + '_' + nameKey;
+    // Deduplicate: use ONLY date as the map key so we don't get 5 names for the same person
+    const dateKey = h.profileA.date;
     
-    if (!personAMap[key]) {
-      let p = db[key];
-      if (!p && db[h.profileA.date]) {
-        p = db[h.profileA.date];
+    if (!personAMap[dateKey]) {
+      const nameKey = (h.profileA.name || 'Без имени').toLowerCase().trim();
+      const fullDbKey = h.profileA.date + '_' + nameKey;
+      
+      let p = db[fullDbKey];
+      if (!p && db[dateKey]) {
+        p = db[dateKey];
       }
       
       if (p) {
-        personAMap[key] = Object.assign({}, p, { dbKey: key });
+        personAMap[dateKey] = Object.assign({}, p, { dbKey: fullDbKey });
       } else {
-        personAMap[key] = { name: h.profileA.name, date: h.profileA.date, code: h.profileA.code || '', dbKey: key };
+        personAMap[dateKey] = { name: h.profileA.name, date: h.profileA.date, code: h.profileA.code || '', dbKey: fullDbKey };
       }
     }
   });
