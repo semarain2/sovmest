@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -200,6 +200,19 @@
         <div class="layers-grid" id="layersGridRev"></div>
       </div>
 
+      <!-- Timeline (Main View) -->
+      <div class="timeline-block" id="mainTimelineContainer" style="margin-top:24px;background:rgba(255,255,255,0.02);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);display:none;">
+        <h3 style="font-size:1rem;margin-bottom:8px;font-family:'Outfit',sans-serif;">📈 Динамика отношений во времени</h3>
+        <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.4;">В 33 года включается Миссия. График показывает изменение синергии с учетом взросления партнёров.</div>
+        <div class="timeline-container">
+          <canvas id="mainTimelineChart"></canvas>
+        </div>
+        <div class="timeline-legend">
+          <span class="legend-cs">Общая совместимость</span>
+          <span class="legend-current">Сейчас</span>
+        </div>
+        <div id="mainTimelineReasons" style="margin-top:16px;font-size:0.85rem;color:var(--text-secondary);line-height:1.5;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);"></div>
+      </div>
       <!-- Comparison Radar -->
       <div class="glass-card radar-container" style="margin-top:24px;">
         <h3 style="text-align:center;font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">📊 Сравнение слоёв</h3>
