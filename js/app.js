@@ -128,18 +128,22 @@ function populateProfileSelector() {
   
   const personAMap = {};
   
-  // Fill from db
-  Object.keys(db).forEach(k => {
-    personAMap[k] = db[k];
-    personAMap[k].dbKey = k;
-  });
-
-  // Fill missing from history
+  // Fill only from history (Person A) to avoid showing Person B in the 'Это я' dropdown
   history.forEach(h => {
     const nameKey = (h.profileA.name || 'Без имени').toLowerCase().trim();
     const key = h.profileA.date + '_' + nameKey;
-    if (!personAMap[key] && !personAMap[h.profileA.date]) {
-      personAMap[key] = { name: h.profileA.name, date: h.profileA.date, code: h.profileA.code || '', dbKey: key };
+    
+    if (!personAMap[key]) {
+      let p = db[key];
+      if (!p && db[h.profileA.date]) {
+        p = db[h.profileA.date];
+      }
+      
+      if (p) {
+        personAMap[key] = Object.assign({}, p, { dbKey: key });
+      } else {
+        personAMap[key] = { name: h.profileA.name, date: h.profileA.date, code: h.profileA.code || '', dbKey: key };
+      }
     }
   });
 
