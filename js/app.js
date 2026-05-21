@@ -130,6 +130,8 @@ function populateProfileSelector() {
   
   // Fill only from history (Person A) to avoid showing Person B in the 'Это я' dropdown
   history.forEach(h => {
+    if (h.hidden) return; // Skip hidden/deleted ratings
+    
     const nameKey = (h.profileA.name || 'Без имени').toLowerCase().trim();
     const key = h.profileA.date + '_' + nameKey;
     
