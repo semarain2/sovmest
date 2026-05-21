@@ -357,7 +357,16 @@ switch ($action) {
             $totalRevenue += $u['revenue'];
         }
         
-        // Sort by last_active desc
+        // First sort by created_at asc to assign stable IDs
+        usort($users, function($a, $b) {
+            return strcmp($a['created_at'], $b['created_at']);
+        });
+        foreach ($users as $i => &$u) {
+            $u['id'] = $i + 1;
+        }
+        unset($u);
+
+        // Sort by last_active desc for display
         usort($users, function($a, $b) {
             return strcmp($b['last_active'], $a['last_active']);
         });

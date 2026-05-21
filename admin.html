@@ -184,7 +184,7 @@
           : '<span class="badge badge-inactive">Неактивен</span>';
         const devId = u.device_id || u.tg_id || '';
         return `<tr class="user-row" onclick="showUserDetail('${devId}')">
-          <td>${i + 1}</td>
+          <td>${u.id}</td>
           <td>${avatar}${name || 'Без имени'}</td>
           <td>${tgLink}</td>
           <td><strong>${u.total_calcs}</strong></td>
