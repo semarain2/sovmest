@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sovmest-v38';
+const CACHE_NAME = 'sovmest-v39';
 
 self.addEventListener('install', event => {
   self.skipWaiting();

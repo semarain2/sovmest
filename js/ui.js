@@ -647,7 +647,8 @@ function renderDualRanking(history) {
   // Collect unique Person A profiles
   const personAMap = {};
   history.forEach(h => {
-    const key = h.profileA.date;
+    const nameKey = (h.profileA.name || 'Аноним').toLowerCase().trim();
+    const key = h.profileA.date + '_' + nameKey;
     if (!personAMap[key]) personAMap[key] = h.profileA;
   });
   const personAs = Object.values(personAMap);
@@ -657,8 +658,10 @@ function renderDualRanking(history) {
 
   personAs.forEach((personA, idx) => {
     const entries = [];
+    const pKeyA = personA.date + '_' + (personA.name || 'Аноним').toLowerCase().trim();
     history.forEach(h => {
-      if (h.profileA.date === personA.date) {
+      const hKeyA = h.profileA.date + '_' + (h.profileA.name || 'Аноним').toLowerCase().trim();
+      if (hKeyA === pKeyA) {
         entries.push({
           other: h.profileB,
           fwd: h.forward.percent,
@@ -680,7 +683,7 @@ function renderDualRanking(history) {
     // Group by person, sort groups by best score
     const groups = {};
     unique.forEach(e => {
-      const pKey = e.other.date;
+      const pKey = e.other.date + '_' + (e.other.name || 'Аноним').toLowerCase().trim();
       if (!groups[pKey]) groups[pKey] = [];
       groups[pKey].push(e);
     });
