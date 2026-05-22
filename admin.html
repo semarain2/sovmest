@@ -182,6 +182,8 @@
         const badge = isRecent
           ? '<span class="badge badge-active">Активен</span>'
           : '<span class="badge badge-inactive">Неактивен</span>';
+        const regionStr = u.region ? u.region.split('/').pop().replace('_', ' ') : '';
+        const statusHtml = regionStr ? badge + '<div style="font-size:0.75rem;margin-top:4px;color:#94a3b8">📍 ' + regionStr + '</div>' : badge;
         const devId = u.device_id || u.tg_id || '';
         return `<tr class="user-row" onclick="showUserDetail('${devId}')">
           <td>${u.id}</td>
@@ -192,7 +194,7 @@
           <td>${u.revenue} сом</td>
           <td>${created}</td>
           <td>${lastAct}</td>
-          <td>${badge}</td>
+          <td>${statusHtml}</td>
         </tr>`;
       }).join('');
     }
@@ -230,6 +232,14 @@
               const fColor = fwd >= 75 ? '#00e676' : fwd >= 55 ? '#ffd740' : '#ff5252';
               const rColor = rev >= 75 ? '#00e676' : rev >= 55 ? '#ffd740' : '#ff5252';
               
+              let reqTime = '';
+              if (item.timestamp) {
+                const t = new Date(item.timestamp);
+                if (!isNaN(t)) reqTime = t.toLocaleDateString('ru') + ' ' + t.toLocaleTimeString('ru', {hour: '2-digit', minute:'2-digit'});
+              }
+              const regionStr = item.region || u.region || '';
+              const metaStr = [reqTime, regionStr].filter(Boolean).join(' · ');
+              
               html += '<div class="calc-card">';
               html += '<div class="calc-row">';
               html += '<div><strong>' + (pA.name||'A') + '</strong> <span style="color:#94a3b8;font-size:0.75rem">' + dateA + '</span>';
@@ -239,7 +249,11 @@
               html += '<div class="calc-row" style="margin-top:6px">';
               html += '<div>→ <span class="calc-score" style="color:' + fColor + '">' + fwd + '%</span></div>';
               html += '<div>← <span class="calc-score" style="color:' + rColor + '">' + rev + '%</span></div>';
-              html += '</div></div>';
+              html += '</div>';
+              if (metaStr) {
+                html += '<div style="margin-top:8px;font-size:0.75rem;color:#64748b;text-align:right;">🕒 ' + metaStr + '</div>';
+              }
+              html += '</div>';
             });
           }
           

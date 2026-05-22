@@ -160,6 +160,10 @@ switch ($action) {
             );
         }
         
+        if (isset($input['region'])) {
+            $user['region'] = $input['region'];
+        }
+
         // Update TG info if provided
         if (isset($input['tg_id']) && $input['tg_id']) {
             $tgId = intval($input['tg_id']);

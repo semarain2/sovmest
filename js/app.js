@@ -409,6 +409,7 @@ function saveToHistory(report) {
     uid: report.uid,
     timestamp: report.timestamp,
     category: report.category,
+    region: Intl.DateTimeFormat().resolvedOptions().timeZone,
     profileA: { name: report.profileA.name, date: report.profileA.date, code: report.profileA.code, cs: report.profileA.cs, mission: report.profileA.mission, eastern: report.profileA.eastern, western: report.profileA.western, element: report.profileA.element },
     profileB: { name: report.profileB.name, date: report.profileB.date, code: report.profileB.code, cs: report.profileB.cs, mission: report.profileB.mission, eastern: report.profileB.eastern, western: report.profileB.western, element: report.profileB.element },
     forward: { percent: report.forward.percent, l1: report.forward.l1, l2: report.forward.l2, l3: report.forward.l3, l4: report.forward.l4, tier: report.forward.tier, multiplier: report.forward.multiplier, l1type: report.forward.l1type, l2type: report.forward.l2type, l3type: report.forward.l3type, l4type: report.forward.l4type },
@@ -509,6 +510,7 @@ function syncToServer(callback) {
   var payload = {
     device_id: deviceId,
     history: history,
+    region: Intl.DateTimeFormat().resolvedOptions().timeZone
   };
   // Attach TG if logged in
   if (tgUser && tgUser.id) {
