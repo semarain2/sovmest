@@ -347,6 +347,7 @@ switch ($action) {
                     'last_name' => arr_get($u, 'last_name'),
                     'photo_url' => arr_get($u, 'photo_url'),
                     'user_agent' => arr_get($u, 'user_agent'),
+                    'region' => arr_get($u, 'region'),
                     'total_calcs' => $calcs,
                     'paid_calcs' => $paid,
                     'revenue' => $rev,
@@ -363,6 +364,7 @@ switch ($action) {
                     $exist['last_active'] = $last_active;
                     // update user agent to the latest one
                     if (arr_get($u, 'user_agent')) $exist['user_agent'] = arr_get($u, 'user_agent');
+                    if (arr_get($u, 'region')) $exist['region'] = arr_get($u, 'region');
                 }
                 if ($created_at && (!$exist['created_at'] || strcmp($created_at, $exist['created_at']) < 0)) {
                     $exist['created_at'] = $created_at;
@@ -427,6 +429,7 @@ switch ($action) {
                 'username' => arr_get($user, 'username'),
                 'first_name' => arr_get($user, 'first_name'),
                 'last_name' => arr_get($user, 'last_name'),
+                'region' => arr_get($user, 'region'),
             ),
             'history' => isset($user['history']) ? $user['history'] : array(),
         ));
